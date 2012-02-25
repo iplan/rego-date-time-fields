@@ -50,70 +50,33 @@ module DateTimeFields
             end
 
             def #{attr_date}=(new_value)
-              if new_value.is_a?(String)
-                @raw_#{attr_date} = new_value
-                begin
-                  new_value = Date.strptime(new_value, '#{options[:date_format]}')
-                rescue Exception
-                  new_value = nil
-                end
-              elsif new_value.present? && !new_value.is_a?(Date)
-                raise ArgumentError.new("Value can be Date object or String object (formatted as #{options[:date_format]}) only. Was: \#{new_value.class.inspect}")
-              end
+              @raw_#{attr_date} = new_value
+              @#{attr_date} = TypeCaster.to_date(new_value, '#{options[:date_format]}')
 
-              @#{attr_date} = new_value
-
-              if new_value.present?
-                if self.#{attr}.nil?
-                  new_value = nil # since we do not want the hour to be 00:00
-                else
-                  new_value = self.#{attr}.change(:day => new_value.day, :month => new_value.month, :year => new_value.year)
-                end
-              end
-              self.#{attr} = new_value
+              casted_time = TypeCaster.to_time(#{attr_time}_before_type_cast, '#{options[:time_format]}')
+              self.#{attr} = TypeCaster.date_and_time_to_timestamp(@#{attr_date}, casted_time, '#{options[:time_format]}')
             end
 
             def #{attr_time}=(new_value)
-              if new_value.is_a?(String)
-                @raw_#{attr_time} = new_value
-                begin
-                  new_value = DateTime.strptime(new_value, '#{options[:time_format]}')
-                rescue Exception
-                  new_value = nil
-                end
-              elsif new_value.present?
-                raise ArgumentError.new("Value can be String formatted as #{options[:time_format]} only. Was: \#{new_value.class.inspect}")
-              end
+              @raw_#{attr_time} = new_value
+              @#{attr_time} = TypeCaster.to_time(new_value, '#{options[:time_format]}')
 
-              @#{attr_time} = new_value.present? ? new_value.strftime('#{options[:time_format]}') : nil
-
-              if new_value.present?
-                if self.#{attr}.nil?
-                  new_value = nil # since we do not want the date to be today
-                else
-                  new_value = self.#{attr}.change(:hour => new_value.hour, :min => new_value.min, :sec => new_value.sec)
-                end
-              end
-              self.#{attr} = new_value
-            end
-
-            def #{attr}_before_type_cast
-              @raw_#{attr}
+              casted_date = TypeCaster.to_date(#{attr_date}_before_type_cast, '#{options[:date_format]}')
+              self.#{attr} = TypeCaster.date_and_time_to_timestamp(casted_date, @#{attr_time}, '#{options[:time_format]}')
             end
 
             def #{attr_date}_before_type_cast
-              @raw_#{attr_date}
+              @raw_#{attr_date} || #{attr_date}
             end
 
             def #{attr_time}_before_type_cast
-              @raw_#{attr_time}
+              @raw_#{attr_time} || #{attr_time}
             end
 
           }
         end
       end
     end
-
   end
 end
 
