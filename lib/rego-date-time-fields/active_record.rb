@@ -4,22 +4,18 @@ module DateTimeFields
 
     module ClassMethods
       def date_attr_writer(*attributes)
+        raise ArgumentError.new("At least one attribute must be passed") if attributes.empty?
+        options = attributes.last.is_a?(Hash) ? attributes.pop : {}
+        options = {:date_format => I18n.t('date.formats.default')}.update(options)
         attributes.each do |attr|
           self.class_eval %{
-            def #{attr}=(value)
-              if !value.nil? && value.is_a?(String)
-                @raw_#{attr} = value
-                begin
-                  value = Date.strptime(value, I18n.t('date.formats.default'))
-                rescue Exception
-                  value = nil
-                end
-              end
-              self[:#{attr}]=value
+            def #{attr}=(new_value)
+              @raw_#{attr} = new_value
+              self[:#{attr}] = TypeCaster.to_date(new_value, '#{options[:date_format]}')
             end
 
             def #{attr}_before_type_cast
-              @raw_#{attr}
+              @raw_#{attr} || self[:#{attr}]
             end
           }
         end
