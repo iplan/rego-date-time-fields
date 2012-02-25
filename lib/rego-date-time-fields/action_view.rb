@@ -3,8 +3,8 @@ module DateTimeFields
 
     module FormOptionsHelper
       def date_field(object_name, method, options = {}, html_options = {})
-        value = I18n.l(options[:object].send(method).to_date) unless options[:object].send(method).blank?
-        options = {:format => t('date.formats.jQuery.default')}.merge(options)
+        options = {:format => I18n.t('date.formats.default')}.merge(options)
+        value = I18n.l(options[:object].send(method).to_date, :format => options[:format]) unless options[:object].send(method).blank?
         html_options = {
                 :value=>value,
                 :style=>"#{options[:static] ? 'display:none' : ''}",
@@ -14,16 +14,16 @@ module DateTimeFields
         # MUST use instance tag, so error message would be displayed near date field
         input_field_tag = ::ActionView::Helpers::InstanceTag.new(object_name, method, self, options.delete(:object)).to_input_field_tag("text", html_options)
         js_tag = javascript_tag "
-            jQuery('##{html_options[:id]}').datepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], { dateFormat: '#{options[:format]}' }));
+            jQuery('##{html_options[:id]}').datepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], { dateFormat: '#{RubyToJqueryDateFormatConvertor.convert(options[:format])}' }));
         "
         input_field_tag << js_tag
       end
 
       def date_time_field(object, method, options = {}, html_options = {})
-        value = I18n.l(options[:object].send(method)) unless options[:object].send(method).empty?
         options = {
-          :date_format => t('date.formats.jQuery.default'), :time_format => t('time.formats.jQuery.default'), :step_minute => 0.5, :hour_min => 0, :hour_max => 23, :minute_grid => 0
+          :date_format => I18n.t('date.formats.default'), :time_format => t('time.formats.jQuery.default'), :step_minute => 0.5, :hour_min => 0, :hour_max => 23, :minute_grid => 0
         }.merge(options)
+        value = I18n.l(options[:object].send(method), :format => options[:date_format]) unless options[:object].send(method).empty?
         html_options = {
                 :value=>value,
                 :style=>"#{options[:static] ? 'display:none' : ''}",
@@ -33,7 +33,7 @@ module DateTimeFields
           haml_concat text_field object, method, html_options
           haml_concat javascript_tag "
             jQuery('##{html_options[:id]}').datetimepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], {
-              dateFormat: '#{options[:date_format]}',
+              dateFormat: '#{RubyToJqueryDateFormatConvertor.convert(options[:date_format])}',
               timeFormat: '#{options[:time_format]}',
               stepMinute: #{options[:step_minute]},
               hourMin: #{options[:hour_min]},

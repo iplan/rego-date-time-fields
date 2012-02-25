@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 describe "form_for().time_field", :type => :view do
 
   describe "with default type" do
-    let(:sms){ FactoryGirl.create(:sms) }
+    let(:sms){ FactoryGirl.create(:sms, :sent_at => DateTime.strptime('22/12/2011 14:45', '%d/%m/%Y %H:%M')) }
     let(:tpl1){ render(:inline => FileMacros.load_view('sms_form_with_time'), :locals => { :sms => sms, :time_field_options => {:from_hour => 10, :to_hour => 22} }) } # time field from 10:00 to 22:00
     let(:tpl2){ render(:inline => FileMacros.load_view('sms_form_with_time'), :locals => { :sms => sms, :time_field_options => {:from_hour => 9, :to_hour => 7} }) } # time field from 9:00 to 7:00
     let(:tpl_24h){ render(:inline => FileMacros.load_view('sms_form_with_time'), :locals => { :sms => sms, :time_field_options => {:from_hour => 11, :to_hour => 11} }) } # time field from 11:00 to 10:45
@@ -27,14 +27,13 @@ describe "form_for().time_field", :type => :view do
 
     it 'should have time input select options' do
       tpl1.should have_tag('select') do
-        with_option '10:00'
-        with_option '15:45'
-        with_option '21:45'
-        with_option '22:00'
-        without_option '09:00'
-        without_option '09:45'
-        without_option '22:15'
-        without_option '22:45'
+        %w{10:00  15:45  21:45  22:00}.each do |hour|
+          with_option hour
+        end
+        %w{09:00  09:45  22:15  22:45}.each do |hour|
+          without_option hour
+        end
+        with_option '14:45', :with => {:selected => 'selected'}
       end
     end
 
