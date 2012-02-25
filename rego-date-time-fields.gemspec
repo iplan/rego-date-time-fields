@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alex"]
-  s.date = "2012-02-24"
+  s.date = "2012-02-25"
   s.description = "Support for timestamp date and time fields to ActiveRecord and forms"
   s.email = "tkachev.alex@gmail.com"
   s.extra_rdoc_files = [
@@ -27,56 +27,57 @@ Gem::Specification.new do |s|
     "lib/rego-date-time-fields.rb",
     "lib/rego-date-time-fields/action_view.rb",
     "lib/rego-date-time-fields/active_record.rb",
+    "lib/rego-date-time-fields/ruby_to_jquery_date_format_convertor.rb",
+    "lib/rego-date-time-fields/type_caster.rb",
     "rego-date-time-fields.gemspec",
     "spec/active_record_spec.rb",
+    "spec/date_field_spec.rb",
     "spec/factories.rb",
     "spec/rego-date-time-fields_spec.rb",
     "spec/resources/db/database.yml",
     "spec/resources/db/schema.rb",
     "spec/resources/db/schema_loader.rb",
     "spec/resources/models/article.rb",
-    "spec/spec_helper.rb"
+    "spec/resources/models/sms.rb",
+    "spec/resources/views/sms_form_with_date.html.erb",
+    "spec/resources/views/sms_form_with_time.html.erb",
+    "spec/ruby_to_jquery_date_format_convertor_spec.rb",
+    "spec/spec_helper.rb",
+    "spec/support/file_macros.rb",
+    "spec/time_field_spec.rb",
+    "spec/type_caster_spec.rb"
   ]
   s.homepage = "http://github.com/alextk/rego-date-time-fields"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
+  s.rubygems_version = "1.8.17"
   s.summary = "Support for timestamp date and time fields to ActiveRecord and forms"
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<rails>, ["~> 3.0.9"])
+      s.add_runtime_dependency(%q<rails>, ["= 3.0.9"])
       s.add_development_dependency(%q<rdoc>, [">= 0"])
-      s.add_development_dependency(%q<rspec>, ["= 2.7.0"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.8.3"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
-      s.add_development_dependency(%q<sqlite3>, [">= 0"])
-      s.add_development_dependency(%q<factory_girl_rails>, [">= 0"])
-      s.add_development_dependency(%q<database_cleaner>, [">= 0"])
+      s.add_development_dependency(%q<rspec>, ["= 2.7.0"])
     else
-      s.add_dependency(%q<rails>, ["~> 3.0.9"])
+      s.add_dependency(%q<rails>, ["= 3.0.9"])
       s.add_dependency(%q<rdoc>, [">= 0"])
-      s.add_dependency(%q<rspec>, ["= 2.7.0"])
       s.add_dependency(%q<bundler>, [">= 0"])
       s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
       s.add_dependency(%q<rcov>, [">= 0"])
-      s.add_dependency(%q<sqlite3>, [">= 0"])
-      s.add_dependency(%q<factory_girl_rails>, [">= 0"])
-      s.add_dependency(%q<database_cleaner>, [">= 0"])
+      s.add_dependency(%q<rspec>, ["= 2.7.0"])
     end
   else
-    s.add_dependency(%q<rails>, ["~> 3.0.9"])
+    s.add_dependency(%q<rails>, ["= 3.0.9"])
     s.add_dependency(%q<rdoc>, [">= 0"])
-    s.add_dependency(%q<rspec>, ["= 2.7.0"])
     s.add_dependency(%q<bundler>, [">= 0"])
     s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
     s.add_dependency(%q<rcov>, [">= 0"])
-    s.add_dependency(%q<sqlite3>, [">= 0"])
-    s.add_dependency(%q<factory_girl_rails>, [">= 0"])
-    s.add_dependency(%q<database_cleaner>, [">= 0"])
+    s.add_dependency(%q<rspec>, ["= 2.7.0"])
   end
 end
 
