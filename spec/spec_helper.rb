@@ -7,6 +7,14 @@ require 'active_record'
 require 'active_support'
 require 'sqlite3'
 
+require 'action_view'
+require 'rspec/rails/adapters'
+require 'rspec/rails/example/rails_example_group'
+require 'rspec/rails/matchers/render_template'
+require 'rspec/rails/example/view_example_group'
+require 'rspec/rails/mocks'
+require 'rspec-html-matchers'
+
 require 'rego-date-time-fields'
 
 # ----------------- db stuff ---------------------
@@ -29,6 +37,8 @@ FactoryGirl.find_definitions
 require 'database_cleaner'
 
 RSpec.configure do |config|
+  config.include RSpec::Rails::ViewExampleGroup, :type => :view, :example_group => {:file_path => 'spec/views'}
+
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)

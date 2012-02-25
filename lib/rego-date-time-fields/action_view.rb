@@ -3,7 +3,7 @@ module DateTimeFields
 
     module FormOptionsHelper
       def date_field(object_name, method, options = {}, html_options = {})
-        value = I18n.l(options[:object].send(method).to_date) unless options[:object].send(method).empty?
+        value = I18n.l(options[:object].send(method).to_date) unless options[:object].send(method).blank?
         options = {:format => t('date.formats.jQuery.default')}.merge(options)
         html_options = {
                 :value=>value,
@@ -13,13 +13,10 @@ module DateTimeFields
 
         # MUST use instance tag, so error message would be displayed near date field
         input_field_tag = ::ActionView::Helpers::InstanceTag.new(object_name, method, self, options.delete(:object)).to_input_field_tag("text", html_options)
-        capture_haml do
-          #haml_concat text_field object_name, method, html_options
-          haml_concat input_field_tag
-          haml_concat javascript_tag "
+        js_tag = javascript_tag "
             jQuery('##{html_options[:id]}').datepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], { dateFormat: '#{options[:format]}' }));
-          "
-        end
+        "
+        input_field_tag << js_tag
       end
 
       def date_time_field(object, method, options = {}, html_options = {})
@@ -49,40 +46,31 @@ module DateTimeFields
     end
 
     module FormBuilder
-      def timestamp_field(method, options = {}, html_options = {})
-        timestamp_date_field(method, options, html_options) + timestamp_time_field(method, options, html_options)
-      end
-
-      def timestamp_date_field(method, options = {}, html_options = {})
-        options = {}.merge(options)
-        method = method.to_s
-        html_options = {:name=>"#{@object_name}[#{method}_date]"}.merge(html_options)
-        @template.date_field(@object_name, "#{method}_date", objectify_options(options), @default_options.merge(html_options))
-      end
-
-      def timestamp_time_field(method, options = {}, html_options = {})
-        options = {:start_hour => 9}.merge(options)
-        method = method.to_s
-        html_options = {:name=>"#{@object_name}[#{method}_time]"}.merge(html_options)
-
-        start_hour = options.delete(:start_hour)
-        hours = (start_hour...(start_hour+24)).to_a.collect{|n| (n%24).to_s.rjust(2,'0')}
-        minutes = (0..59).step(15).to_a.collect{|n| n.to_s.rjust(2,'0')}
-        time_arr = hours.collect{|h| minutes.collect{|m| "#{h}:#{m}"}}.flatten
-
-        unless @object.send(method).nil?
-          hour = @object.send(method).hour.to_s.rjust(2,'0')
-          minute = @object.send(method).min.to_s.rjust(2,'0')
-          selected = "#{hour}:#{minute}"
-        end
-
-        choices = @template.options_for_select(time_arr, @object.send(method+'_time'))
-        select("#{method}_time", choices, options, @default_options.merge(html_options))
-      end
 
       def date_field(method, options = {}, html_options = {})
         options = {}.merge(options)
         @template.date_field(@object_name, method, objectify_options(options), @default_options.merge(html_options))
+      end
+
+      def time_field(method, options = {}, html_options = {})
+        options = {:from_hour => 9, :to_hour => 8, :minutes_step => 15}.merge(options)
+        method = method.to_s
+
+        start_hour = options.delete(:from_hour)
+        end_hour = options.delete(:to_hour)
+        end_hour += 24 if end_hour <= start_hour
+        hours = (start_hour..end_hour).to_a.collect{|n| (n%24).to_s.rjust(2,'0')}
+
+        minutes_step = options.delete(:minutes_step)
+        minutes = (0..59).step(minutes_step).to_a.collect{|n| n.to_s.rjust(2,'0')}
+
+        last_hour = hours.pop
+        time_arr = hours.collect{|h| minutes.collect{|m| "#{h}:#{m}"}}.flatten
+        last_time = "#{last_hour}:00"
+        time_arr << last_time unless time_arr.first == last_time
+
+        choices = @template.options_for_select(time_arr, @object.send(method))
+        select(method, choices, options, @default_options.merge(html_options))
       end
 
       def date_time_field(method, options = {}, html_options = {})
@@ -92,11 +80,10 @@ module DateTimeFields
 
     end
 
-
   end
 end
 
 
 require 'action_view'
-ActionView::Base.send :include, DateTimeFields::ActionView::FormOptionsHelper
+ActionView::Helpers::FormHelper.send :include, DateTimeFields::ActionView::FormOptionsHelper
 ActionView::Helpers::FormBuilder.send :include, DateTimeFields::ActionView::FormBuilder

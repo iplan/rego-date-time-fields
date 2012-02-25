@@ -7,10 +7,15 @@ gem 'rails', '=3.0.9'
 # Include everything needed to run rake, tests, features, etc.
 group :development do
   gem "rdoc"
-  gem "rspec", '2.7.0'
   gem "bundler"
   gem "jeweler", "~> 1.8.3"
   gem "rcov"
+end
+
+group :test do
+  gem "rspec", '2.7.0'
+  gem "rspec-rails"
+  gem 'rspec-html-matchers'
   gem 'sqlite3'
   gem "factory_girl_rails"
   gem 'database_cleaner'

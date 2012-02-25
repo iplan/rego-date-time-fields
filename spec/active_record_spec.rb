@@ -151,19 +151,19 @@ describe "ActiveRecord::Base" do
       sms.sent_at_time.should be_nil
     end
 
-    it 'should have sent_at_date and sent_at_time attributes invalid' do
-      sms = Sms.new(:name => 'do it fast')
-      sms.should_not be_valid
-      sms.errors[:sent_at_date].should be_present
-      sms.errors[:sent_at_time].should be_present
-    end
-
-    it 'should have sent_at_date invalid when empty string is passed' do
-      sms.sent_at_date = ''
-      sms.should_not be_valid
-      sms.errors.count.should == 1
-      sms.errors[:sent_at_date].should be_present
-      sms.errors[:sent_at_time].should be_empty
-    end
+    #it 'should have sent_at_date and sent_at_time attributes invalid' do
+    #  sms = Sms.new(:name => 'do it fast')
+    #  sms.should_not be_valid
+    #  sms.errors[:sent_at_date].should be_present
+    #  sms.errors[:sent_at_time].should be_present
+    #end
+    #
+    #it 'should have sent_at_date invalid when empty string is passed' do
+    #  sms.sent_at_date = ''
+    #  sms.should_not be_valid
+    #  sms.errors.count.should == 1
+    #  sms.errors[:sent_at_date].should be_present
+    #  sms.errors[:sent_at_time].should be_empty
+    #end
   end
 end
