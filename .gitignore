@@ -2,9 +2,6 @@
 .idea/
 .idea/**/*
 
-# Gemfile.lock
-Gemfile.lock
-
 # log files
 *.log
 

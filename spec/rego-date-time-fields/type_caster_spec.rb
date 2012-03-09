@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+require 'spec_helper'
 
 describe DateTimeFields::ActiveRecord::TypeCaster do
   let(:article){ FactoryGirl.create(:article, :published_at => DateTime.strptime('22/12/2011 13:57', '%d/%m/%Y %H:%M')) }

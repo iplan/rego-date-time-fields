@@ -32,6 +32,7 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 # load factories for factory girl
 require "factory_girl"
+FactoryGirl.definition_file_paths = FactoryGirl.definition_file_paths.map {|path| File.join(File.dirname(__FILE__), path) }
 FactoryGirl.find_definitions
 
 require 'database_cleaner'
