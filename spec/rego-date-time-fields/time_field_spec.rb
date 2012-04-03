@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "form_for().time_field", :type => :view do
 
   describe "with default type" do
-    let(:sms){ FactoryGirl.create(:sms, :sent_at => DateTime.strptime('22/12/2011 14:45', '%d/%m/%Y %H:%M')) }
+    let(:sms){ FactoryGirl.create(:sms, :sent_at => Time.zone.parse('2011-12-22 14:45:00')) }
     let(:tpl1){ render(:inline => FileMacros.load_view('sms_form_with_time'), :locals => { :sms => sms, :time_field_options => {:from_hour => 10, :to_hour => 22} }) } # time field from 10:00 to 22:00
     let(:tpl2){ render(:inline => FileMacros.load_view('sms_form_with_time'), :locals => { :sms => sms, :time_field_options => {:from_hour => 9, :to_hour => 7} }) } # time field from 9:00 to 7:00
     let(:tpl_24h){ render(:inline => FileMacros.load_view('sms_form_with_time'), :locals => { :sms => sms, :time_field_options => {:from_hour => 11, :to_hour => 11} }) } # time field from 11:00 to 10:45

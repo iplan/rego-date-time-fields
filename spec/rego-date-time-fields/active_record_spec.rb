@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ActiveRecord::Base do
-  let(:article){ FactoryGirl.create(:article, :published_at => DateTime.strptime('22/12/2011 13:57', '%d/%m/%Y %H:%M')) }
+  let(:article){ FactoryGirl.create(:article, :published_at => Time.zone.parse('2011-12-22 13:57:00')) }
 
   it 'should have getters and setters and before_type_casts defined' do
     article.should respond_to(:published_at)

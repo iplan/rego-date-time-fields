@@ -1,27 +1,26 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
+
+require 'rubygems'
+require 'bundler/setup'
+
+# first initialize full rails stack with dummy_app
+ENV["RAILS_ENV"] = "test"
+require File.expand_path(File.dirname(__FILE__) + "/dummy_app/config/environment")
+
+# include rspec and rspec rails
 require 'rspec'
+require 'rspec/rails'
 
-require 'logger'
-require 'active_record'
-require 'active_support'
-require 'sqlite3'
-
-require 'action_view'
-require 'rspec/rails/adapters'
-require 'rspec/rails/example/rails_example_group'
-require 'rspec/rails/matchers/render_template'
-require 'rspec/rails/example/view_example_group'
-require 'rspec/rails/mocks'
-require 'rspec-html-matchers'
-
+# next extend rails in the way this gem intends to
 require 'rego-date-time-fields'
+DateTimeFields::Railtie.new.run_initializers
 
 # ----------------- db stuff ---------------------
-#load models schema (create tables)
-require "resources/db/schema_loader"
+# load models schema (create tables)
+require "resources/db/schema"
 
-#load models
+# load models
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'models'))
 Dir["#{File.dirname(__FILE__)}/resources/models/**/*.rb"].each {|f| require f}
 # ----------------- end db stuff -----------------
@@ -32,7 +31,7 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 # load factories for factory girl
 require "factory_girl"
-FactoryGirl.definition_file_paths = FactoryGirl.definition_file_paths.map {|path| File.join(File.dirname(__FILE__), path) }
+FactoryGirl.definition_file_paths = File.join(File.dirname(__FILE__), 'factories')
 FactoryGirl.find_definitions
 
 require 'database_cleaner'

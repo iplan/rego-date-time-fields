@@ -22,6 +22,7 @@ Jeweler::Tasks.new do |gem|
   gem.email = "tkachev.alex@gmail.com"
   gem.authors = ["Alex"]
   # dependencies defined in Gemfile
+  gem.files.exclude 'spec/**/*'
 end
 Jeweler::RubygemsDotOrgTasks.new
 

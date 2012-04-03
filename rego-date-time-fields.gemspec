@@ -31,23 +31,7 @@ Gem::Specification.new do |s|
     "lib/rego-date-time-fields/railtie.rb",
     "lib/rego-date-time-fields/ruby_to_jquery_date_format_convertor.rb",
     "lib/rego-date-time-fields/type_caster.rb",
-    "rego-date-time-fields.gemspec",
-    "spec/factories.rb",
-    "spec/rego-date-time-fields/active_record_spec.rb",
-    "spec/rego-date-time-fields/date_field_spec.rb",
-    "spec/rego-date-time-fields/ruby_to_jquery_date_format_convertor_spec.rb",
-    "spec/rego-date-time-fields/time_field_spec.rb",
-    "spec/rego-date-time-fields/type_caster_spec.rb",
-    "spec/rego-date-time-fields_spec.rb",
-    "spec/resources/db/database.yml",
-    "spec/resources/db/schema.rb",
-    "spec/resources/db/schema_loader.rb",
-    "spec/resources/models/article.rb",
-    "spec/resources/models/sms.rb",
-    "spec/resources/views/sms_form_with_date.html.erb",
-    "spec/resources/views/sms_form_with_time.html.erb",
-    "spec/spec_helper.rb",
-    "spec/support/file_macros.rb"
+    "rego-date-time-fields.gemspec"
   ]
   s.homepage = "http://github.com/alextk/rego-date-time-fields"
   s.licenses = ["MIT"]
