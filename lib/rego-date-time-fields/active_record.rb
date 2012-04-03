@@ -1,7 +1,5 @@
 module DateTimeFields
   module ActiveRecord
-    extend ActiveSupport::Concern
-
     module ClassMethods
       def date_attr_writer(*attributes)
         raise ArgumentError.new("At least one attribute must be passed") if attributes.empty?
@@ -76,4 +74,3 @@ module DateTimeFields
   end
 end
 
-ActiveRecord::Base.send :include, DateTimeFields::ActiveRecord

@@ -82,8 +82,3 @@ module DateTimeFields
 
   end
 end
-
-
-require 'action_view'
-ActionView::Helpers::FormHelper.send :include, DateTimeFields::ActionView::FormOptionsHelper
-ActionView::Helpers::FormBuilder.send :include, DateTimeFields::ActionView::FormBuilder
