@@ -26,6 +26,7 @@ module DateTimeFields
         attributes.each do |attr|
           attr_date = "#{attr}_date"
           attr_time = "#{attr}_time"
+          attr_js_timestamp = "#{attr}_js_timestamp"
           self.class_eval %{
             def #{attr_date}
               if self.#{attr}.nil?
@@ -41,6 +42,10 @@ module DateTimeFields
               else
                 self.#{attr}.strftime('#{options[:time_format]}')
               end
+            end
+
+            def #{attr_js_timestamp}
+              (self.#{attr}.to_f*1000).to_i if !self.#{attr}.nil?
             end
 
             def #{attr_date}=(new_value)
@@ -59,12 +64,24 @@ module DateTimeFields
               self.#{attr} = TypeCaster.date_and_time_to_timestamp(casted_date, @#{attr_time}, '#{options[:time_format]}')
             end
 
+            def #{attr_js_timestamp}=(new_value)
+              @raw_#{attr_js_timestamp} = new_value
+              if new_value.present?
+                @#{attr_js_timestamp} = new_value.to_i/1000
+                self.#{attr} = Time.at(@#{attr_js_timestamp})
+              end
+            end
+
             def #{attr_date}_before_type_cast
               @raw_#{attr_date} || #{attr_date}
             end
 
             def #{attr_time}_before_type_cast
               @raw_#{attr_time} || #{attr_time}
+            end
+
+            def #{attr_js_timestamp}_before_type_cast
+              @raw_#{attr_js_timestamp} || #{attr_js_timestamp}
             end
 
           }
