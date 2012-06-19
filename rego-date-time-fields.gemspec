@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/alextk/rego-date-time-fields"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
+  s.rubygems_version = "1.8.17"
   s.summary = "Support for timestamp date and time fields to ActiveRecord and forms"
 
   if s.respond_to? :specification_version then
