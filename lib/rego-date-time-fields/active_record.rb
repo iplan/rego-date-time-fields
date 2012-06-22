@@ -9,7 +9,7 @@ module DateTimeFields
           self.class_eval %{
             def #{attr}=(new_value)
               @raw_#{attr} = new_value
-              self[:#{attr}] = TypeCaster.to_date(new_value, '#{options[:date_format]}')
+              self[:#{attr}] = DateTimeFields::TypeCaster.string_to_date(new_value, '#{options[:date_format]}')
             end
 
             def #{attr}_before_type_cast
@@ -50,18 +50,18 @@ module DateTimeFields
 
             def #{attr_date}=(new_value)
               @raw_#{attr_date} = new_value
-              @#{attr_date} = TypeCaster.to_date(new_value, '#{options[:date_format]}')
+              @#{attr_date} = DateTimeFields::TypeCaster.string_to_date(new_value, '#{options[:date_format]}')
 
-              casted_time = TypeCaster.to_time(#{attr_time}_before_type_cast, '#{options[:time_format]}')
-              self.#{attr} = TypeCaster.date_and_time_to_timestamp(@#{attr_date}, casted_time, '#{options[:time_format]}')
+              casted_time = DateTimeFields::TypeCaster.string_to_time(#{attr_time}_before_type_cast, '#{options[:time_format]}')
+              self.#{attr} = DateTimeFields::TypeCaster.date_and_time_to_timestamp(@#{attr_date}, casted_time, '#{options[:time_format]}')
             end
 
             def #{attr_time}=(new_value)
               @raw_#{attr_time} = new_value
-              @#{attr_time} = TypeCaster.to_time(new_value, '#{options[:time_format]}')
+              @#{attr_time} = DateTimeFields::TypeCaster.string_to_time(new_value, '#{options[:time_format]}')
 
-              casted_date = TypeCaster.to_date(#{attr_date}_before_type_cast, '#{options[:date_format]}')
-              self.#{attr} = TypeCaster.date_and_time_to_timestamp(casted_date, @#{attr_time}, '#{options[:time_format]}')
+              casted_date = DateTimeFields::TypeCaster.string_to_date(#{attr_date}_before_type_cast, '#{options[:date_format]}')
+              self.#{attr} = DateTimeFields::TypeCaster.date_and_time_to_timestamp(casted_date, @#{attr_time}, '#{options[:time_format]}')
             end
 
             def #{attr_js_timestamp}=(new_value)

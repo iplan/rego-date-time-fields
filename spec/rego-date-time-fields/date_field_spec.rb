@@ -29,9 +29,9 @@ describe "form_for().date_field", :type => :view do
 
     it 'should have value inside it from model date' do
       template.should have_tag('input', :with => {:name => 'sms[sent_at_date]', :value => sms.sent_at_date.strftime(I18n.t('date.formats.default'))})
-      template.should have_tag('script', :text => /#{DateTimeFields::RubyToJqueryDateFormatConvertor.convert(I18n.t('date.formats.default'))}/i)
+      template.should have_tag('script', :text => /#{DateTimeFields::TypeCaster.ruby_date_format_to_jquery_date_format(I18n.t('date.formats.default'))}/i)
       tpl_custom_format.should have_tag('input', :with => {:name => 'sms[sent_at_date]', :value => sms.sent_at_date.strftime('%d/%m/%Y')})
-      tpl_custom_format.should have_tag('script', :text => /#{DateTimeFields::RubyToJqueryDateFormatConvertor.convert('%d/%m/%Y')}/i)
+      tpl_custom_format.should have_tag('script', :text => /#{DateTimeFields::TypeCaster.ruby_date_format_to_jquery_date_format('%d/%m/%Y')}/i)
     end
 
   end
