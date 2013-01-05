@@ -10,7 +10,7 @@ module DateTimeFields
           :static => false
         }.merge(options)
 
-        value = I18n.l(value.to_date, :format => options[:format]) unless value.blank?
+        value = I18n.l(value.to_date, :format => options[:format]) if value.present? && (value.is_a?(Date) || value.is_a?(Time))
 
         html_options = { :type => "text", :name => name, :id => sanitize_to_id(name), :value => value }.update(html_options.stringify_keys)
 
