@@ -103,7 +103,15 @@ module DateTimeFields
         minutes = (0..59).step(minutes_step).to_a.collect{|n| n.to_s.rjust(2,'0')}
 
         last_hour = hours.pop
-        time_arr = hours.collect{|h| minutes.collect{|m| "#{h}:#{m}"}}.flatten
+        selected_value = object.send(method)
+        selected_value_hour, selected_value_minute = selected_value.split(':') if selected_value.present?
+        time_arr = hours.collect do |h|
+          if selected_value_hour.present? && h==selected_value_hour
+            minutes = (minutes + [selected_value_minute]).uniq.sort_by{|m|m.to_i} #add selected minute to minutes array if it does not include it
+          end
+          minutes.collect{|m| "#{h}:#{m}"}
+        end
+        time_arr = time_arr.flatten
         last_time = "#{last_hour}:00"
         time_arr << last_time unless time_arr.first == last_time
 
