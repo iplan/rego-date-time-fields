@@ -115,7 +115,7 @@ module DateTimeFields
         last_time = "#{last_hour}:00"
         time_arr << last_time unless time_arr.first == last_time
 
-        choices = @template.options_for_select(time_arr, @object.send(method))
+        choices = @template.options_for_select(time_arr, @object.send(method) || options[:selected])
         select(method, choices, options, @default_options.merge(html_options))
       end
 
