@@ -44,6 +44,7 @@ module DateTimeFields
 
         # MUST use instance tag, so error message would be displayed near date field
         input_field_tag = ::ActionView::Helpers::InstanceTag.new(object_name, method, self, options.delete(:object)).to_input_field_tag("text", html_options)
+        options[:disabled] ||= html_options[:readonly] || html_options[:disabled]
         js_tag = javascript_tag DateTimeFields::ActionView::JqueryDatePicker.date_picker_js(options.update(:id => html_options[:id]))
         #js_tag = javascript_tag "
         #    jQuery('##{html_options[:id]}').datepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], {
@@ -133,7 +134,8 @@ module DateTimeFields
           jQuery('##{options[:id]}').datepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], {
             dateFormat: '#{DateTimeFields::TypeCaster.ruby_date_format_to_jquery_date_format(options[:format])}',
             showOtherMonths: #{options[:show_other_months]},
-            selectOtherMonths: #{options[:select_other_months]}
+            selectOtherMonths: #{options[:select_other_months]},
+            disabled: #{options[:disabled]==true}
           }));
         "
       end
