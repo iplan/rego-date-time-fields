@@ -1,58 +1,36 @@
 module DateTimeFields
   module ActionView
 
+    module InstanceTag
+
+      def to_date_field(options = {})
+        add_default_name_and_id(options)
+        error_wrapping( @template_object.date_field_tag(options['name'], options[:value]||value_before_type_cast(object), options) )
+      end
+
+    end
+
     module FormTagHelper
-      def date_field_tag(name, value = nil, options = {}, html_options = {})
-        options = {
-          :format => I18n.t('date.formats.default'),
+      def date_field_tag(name, value = nil, html_options = {})
+        datepicker_options = {
+          :wrap_js_in_document_ready=>false,
+          :date_format => I18n.t('date.formats.default'),
           :show_other_months => true,
-          :select_other_months => true,
-          :static => false
-        }.merge(options)
+          :select_other_months => true
+        }.merge(html_options.delete(:datepicker_options)||{})
 
-        value = I18n.l(value.to_date, :format => options[:format]) if value.present? && (value.is_a?(Date) || value.is_a?(Time))
-
-        html_options = { :type => "text", :name => name, :id => sanitize_to_id(name), :value => value }.update(html_options.stringify_keys)
+        value = I18n.l(value.to_date, :format => datepicker_options[:date_format]) if value.present? && (value.is_a?(Date) || value.is_a?(Time))
+        html_options = { :type => "text", :name => name, :id => sanitize_to_id(name), :value => value }.merge(html_options.stringify_keys)
 
         input_field_tag = tag :input, html_options
-        js_tag = javascript_tag DateTimeFields::ActionView::JqueryDatePicker.date_picker_js(options.update(:id => html_options[:id]))
-        #js_tag = javascript_tag "
-        #    jQuery('##{html_options[:id]}').datepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], {
-        #      dateFormat: '#{DateTimeFields::TypeCaster.ruby_date_format_to_jquery_date_format(options[:format])}',
-        #      showOtherMonths: #{options[:show_other_months]},
-        #      selectOtherMonths: #{options[:select_other_months]}
-        #    }));
-        #"
+        js_tag = javascript_tag DateTimeFields::ActionView::JqueryDatePicker.date_picker_js(html_options[:id], datepicker_options)
         input_field_tag << js_tag
       end
     end
 
     module FormOptionsHelper
       def date_field(object_name, method, options = {}, html_options = {})
-        options = {
-          :format => I18n.t('date.formats.default'),
-          :show_other_months => true,
-          :select_other_months => true,
-          :static => false
-        }.merge(options)
-        value = I18n.l(options[:object].send(method).to_date, :format => options[:format]) unless options[:object].send(method).blank?
-        html_options = {
-                :value=>value,
-                :style=>"#{options[:static] ? 'display:none' : ''}",
-                :id=>"#{object_name.gsub(/\]\[|[^-a-zA-Z0-9:.]/, "_").sub(/_$/, "")}_#{method.to_s.sub(/\?$/,"")}"
-        }.update(html_options)
-
-        # MUST use instance tag, so error message would be displayed near date field
-        input_field_tag = ::ActionView::Helpers::InstanceTag.new(object_name, method, self, options.delete(:object)).to_input_field_tag("text", html_options)
-        js_tag = javascript_tag DateTimeFields::ActionView::JqueryDatePicker.date_picker_js(options.update(:id => html_options[:id]))
-        #js_tag = javascript_tag "
-        #    jQuery('##{html_options[:id]}').datepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], {
-        #      dateFormat: '#{DateTimeFields::TypeCaster.ruby_date_format_to_jquery_date_format(options[:format])}',
-        #      showOtherMonths: #{options[:show_other_months]},
-        #      selectOtherMonths: #{options[:select_other_months]}
-        #    }));
-        #"
-        input_field_tag << js_tag
+        ::ActionView::Helpers::InstanceTag.new(object_name, method, self, options.delete(:object)).to_date_field(html_options)
       end
 
       def date_time_field(object, method, options = {}, html_options = {})
@@ -85,9 +63,8 @@ module DateTimeFields
 
     module FormBuilder
 
-      def date_field(method, options = {}, html_options = {})
-        options = {}.merge(options)
-        @template.date_field(@object_name, method, objectify_options(options), @default_options.merge(html_options))
+      def date_field(method, html_options = {})
+        @template.date_field(@object_name, method, objectify_options({}), @default_options.merge(html_options))
       end
 
       def time_field(method, options = {}, html_options = {})
@@ -128,15 +105,23 @@ module DateTimeFields
 
     module JqueryDatePicker
 
-      def self.date_picker_js(options)
-        "
-          jQuery('##{options[:id]}').datepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], {
-            dateFormat: '#{DateTimeFields::TypeCaster.ruby_date_format_to_jquery_date_format(options[:format])}',
-            showOtherMonths: #{options[:show_other_months]},
-            selectOtherMonths: #{options[:select_other_months]},
+      def self.date_picker_js(id, options)
+        wrap_js_in_document_ready = options.delete(:wrap_js_in_document_ready)
+        options = options.merge(:date_format=>DateTimeFields::TypeCaster.ruby_date_format_to_jquery_date_format(options[:date_format])).stringify_keys
+        options.each{|k,v| options.delete(k); options[k.camelcase(:lower)]=v } # camelcase all keys
+        js = "
+          jQuery('##{id}').datepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], #{options.to_json}, {
             beforeShow: function(i) { if ($(i).attr('readonly')) { return false; } }
           }));
         "
+        if wrap_js_in_document_ready
+          js = "
+            $(document).ready(function() {
+              #{js}
+            });
+          "
+        end
+        js
       end
 
       def self.date_time_picker_js(options)
