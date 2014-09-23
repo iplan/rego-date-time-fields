@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "rego-date-time-fields"
-  s.version = "0.1.8"
+  s.version = "0.1.10"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alex"]
-  s.date = "2014-05-28"
+  s.date = "2014-09-23"
   s.description = "Support for timestamp date and time fields to ActiveRecord and forms"
   s.email = "tkachev.alex@gmail.com"
   s.extra_rdoc_files = [
