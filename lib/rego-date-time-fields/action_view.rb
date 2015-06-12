@@ -108,7 +108,7 @@ module DateTimeFields
       def self.date_picker_js(id, options)
         wrap_js_in_document_ready = options.delete(:wrap_js_in_document_ready)
         options = options.merge(:date_format=>DateTimeFields::TypeCaster.ruby_date_format_to_jquery_date_format(options[:date_format])).stringify_keys
-        options.each{|k,v| options.delete(k); options[k.camelcase(:lower)]=v } # camelcase all keys
+        options.clone.each{|k,v| options.delete(k); options[k.camelcase(:lower)]=v } # camelcase all keys
         js = "
           jQuery('##{id}').datepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], #{options.to_json}, {
             beforeShow: function(i) { if ($(i).attr('readonly')) { return false; } }
