@@ -8,7 +8,7 @@ gem 'rails', '=3.0.9'
 group :development do
   gem "rdoc"
   gem "bundler"
-  gem "jeweler", "~> 1.8.3"
+  gem "jeweler", "~> 1.8.8"
   gem "rcov"
   gem "rspec", '2.7.0'
 end
