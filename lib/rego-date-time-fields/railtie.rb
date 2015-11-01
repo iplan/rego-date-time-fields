@@ -5,6 +5,7 @@ module DateTimeFields
       ::ActionView::Base.send :include, DateTimeFields::ActionView::FormOptionsHelper
       ::ActionView::Base.send :include, DateTimeFields::ActionView::FormTagHelper
       ::ActionView::Helpers::FormBuilder.send :include, DateTimeFields::ActionView::FormBuilder
+      ::ActionView::Helpers::InstanceTag.send :include, DateTimeFields::ActionView::InstanceTag
     end
   end
 end

@@ -13,7 +13,8 @@ module DateTimeFields
             end
 
             def #{attr}_before_type_cast
-              @raw_#{attr} || self[:#{attr}]
+              result = @raw_#{attr} || self[:#{attr}]
+              result.is_a?(Date) ? I18n.l(result, :format => '#{options[:date_format]}') : result
             end
           }
         end
@@ -73,7 +74,8 @@ module DateTimeFields
             end
 
             def #{attr_date}_before_type_cast
-              @raw_#{attr_date} || #{attr_date}
+              result = @raw_#{attr_date} || #{attr_date}
+              result.is_a?(Date) ? I18n.l(result, :format => '#{options[:date_format]}') : result
             end
 
             def #{attr_time}_before_type_cast
