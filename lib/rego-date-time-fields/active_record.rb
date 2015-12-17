@@ -7,6 +7,10 @@ module DateTimeFields
         options = {:date_format => I18n.t('date.formats.default')}.update(options)
         attributes.each do |attr|
           self.class_eval %{
+            def #{attr}
+              read_attribute(:#{attr})
+            end
+
             def #{attr}=(new_value)
               @raw_#{attr} = new_value
               self[:#{attr}] = DateTimeFields::TypeCaster.string_to_date(new_value, '#{options[:date_format]}')
