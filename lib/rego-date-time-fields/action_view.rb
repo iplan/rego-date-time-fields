@@ -4,8 +4,9 @@ module DateTimeFields
     module InstanceTag
 
       def to_date_field(options = {})
+        options = options.with_indifferent_access # this is needed to if options has index it would work
         add_default_name_and_id(options)
-        error_wrapping( @template_object.date_field_tag(options['name'], options[:value]||value_before_type_cast(object), options) )
+        error_wrapping( @template_object.date_field_tag(options[:name], options[:value]||value_before_type_cast(object), options) )
       end
 
     end
