@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Alex"]
-  s.date = "2015-12-24"
+  s.date = "2015-12-25"
   s.description = "Support for timestamp date and time fields to ActiveRecord and forms"
   s.email = "tkachev.alex@gmail.com"
   s.extra_rdoc_files = [
