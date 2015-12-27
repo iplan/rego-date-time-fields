@@ -45,7 +45,7 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rails>, [">= 3.0.9"])
-      s.add_runtime_dependency(%q<activemodel>, ["=> 3.0.9"])
+      s.add_runtime_dependency(%q<activemodel>, [">= 3.0.9"])
       s.add_development_dependency(%q<rdoc>, [">= 0"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.8.8"])
