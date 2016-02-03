@@ -46,7 +46,7 @@ module DateTimeFields
         }.update(html_options)
         capture_haml do
           haml_concat text_field object, method, html_options
-          haml_concat javascript_tag(DateTimeFields::ActionView::JqueryDatePicker.date_time_picker_js(options.update(:id => html_options[:id])))
+          haml_concat javascript_tag(DateTimeFields::ActionView::JqueryDatePicker.date_time_picker_js(html_options[:id], options))
           #haml_concat javascript_tag "
           #  jQuery('##{html_options[:id]}').datetimepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], {
           #    dateFormat: '#{DateTimeFields::TypeCaster.ruby_date_format_to_jquery_date_format(options[:date_format])}',
@@ -111,7 +111,7 @@ module DateTimeFields
         options = options.merge(:date_format=>DateTimeFields::TypeCaster.ruby_date_format_to_jquery_date_format(options[:date_format])).stringify_keys
         options.clone.each{|k,v| options.delete(k); options[k.camelcase(:lower)]=v } # camelcase all keys
         js = "
-          jQuery('##{id}').datepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], #{options.to_json}, {
+          jQuery('input[type=text][id=#{id}]').datepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], #{options.to_json}, {
             beforeShow: function(i) { if ($(i).attr('readonly')) { return false; } }
           }));
         "
@@ -125,9 +125,9 @@ module DateTimeFields
         js
       end
 
-      def self.date_time_picker_js(options)
+      def self.date_time_picker_js(id, options)
         "
-          jQuery('##{options[:id]}').datetimepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], {
+          jQuery('input[type=text][id=#{id}]').datetimepicker(jQuery.extend({}, jQuery.datepicker.regional['#{I18n.locale}'], {
             dateFormat: '#{DateTimeFields::TypeCaster.ruby_date_format_to_jquery_date_format(options[:date_format])}',
             showOtherMonths: #{options[:show_other_months]},
             timeFormat: '#{options[:time_format]}',
