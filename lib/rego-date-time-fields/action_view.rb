@@ -21,7 +21,7 @@ module DateTimeFields
         }.merge(html_options.delete(:datepicker_options)||{})
 
         value = I18n.l(value.to_date, :format => datepicker_options[:date_format]) if value.present? && (value.is_a?(Date) || value.is_a?(Time))
-        html_options = { :type => "text", :autocomplete => 'off' :name => name, :id => sanitize_to_id(name), :value => value }.merge(html_options.stringify_keys)
+        html_options = { :type => "text", :autocomplete => 'off', :name => name, :id => sanitize_to_id(name), :value => value }.merge(html_options.stringify_keys)
 
         input_field_tag = tag :input, html_options
         js_tag = javascript_tag DateTimeFields::ActionView::JqueryDatePicker.date_picker_js(html_options[:id], datepicker_options)
