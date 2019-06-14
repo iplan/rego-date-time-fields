@@ -100,8 +100,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activemodel (~> 3.0.9)
-  activesupport (~> 3.0.9)
+  activemodel (>= 3.0.9)
+  activesupport (>= 3.0.9)
   bundler
   database_cleaner
   factory_girl_rails
@@ -111,3 +111,6 @@ DEPENDENCIES
   rspec-html-matchers
   rspec-rails
   sqlite3
+
+BUNDLED WITH
+   1.13.6
